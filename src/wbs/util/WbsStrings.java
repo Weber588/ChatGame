@@ -57,4 +57,12 @@ public abstract class WbsStrings {
 		}
 		return String.join(" ", newStringList);
 	}
+	
+	public static String asList(Enum<?>[] strings) {
+		String[] newStringList = new String[strings.length];
+		for (int i = 0; i < strings.length; i++) {
+			newStringList[i] = capitalizeAll(strings[i].name()).replace('_', ' ');
+		}
+		return String.join(", ", newStringList);
+	}
 }
