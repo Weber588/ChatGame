@@ -237,7 +237,7 @@ public class Game {
 			endRound();
 		}
 		Bukkit.getScheduler().cancelTask(currentTimerID); // Cancel the current timer
-		ChatGame.broadcast("This round was skipped. New question:");
+		ChatGame.broadcast("Skipping to next round. New question:");
 		nextRound();
 	}
 	

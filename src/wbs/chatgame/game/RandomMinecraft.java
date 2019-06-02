@@ -1,15 +1,10 @@
 package wbs.chatgame.game;
 
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.List;
 import java.util.Random;
 
 import org.bukkit.Material;
 import org.bukkit.block.Biome;
 import org.bukkit.enchantments.Enchantment;
-
-import wbs.util.WbsStrings;
 
 // Helper class for getting random materials given restrictions
 public class RandomMinecraft {

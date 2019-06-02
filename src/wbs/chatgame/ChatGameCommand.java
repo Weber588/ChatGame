@@ -78,19 +78,16 @@ public class ChatGameCommand implements CommandExecutor {
 			break;
 		case "SKIP":
 			if (checkPermission(sender, "chatgame.admin.skip")) {
-				sendMessage("Skipping round", sender);
 				Game.skipRound();
 			}
 			break;
 		case "NEXT":
 			if (checkPermission(sender, "chatgame.admin.next")) {
-				if (length > 1) {
-					String typeString = String.join("_", args);
-					typeString = typeString.substring(6).toUpperCase(); // Omit "next "
-					GameType next = getGameType(typeString); // Method to handle parsing String to Enum
-					
+				if (length > 1) { // Omit "next "
+					GameType next = getGameType(args[1]); // Method to handle parsing String to Enum
 					if (next != null) {
 						Game.nextType(next);
+						sendMessage("The next game type will be " + WbsStrings.capitalize(args[1]), sender);
 					} else {
 						sendMessage("Invalid game type; please choose from the following: &h" + getTypesList(), sender);
 					}
@@ -109,18 +106,18 @@ public class ChatGameCommand implements CommandExecutor {
 	
 	private String getTypesList() {
 	//	if (allTypes == null) { // Only do this when the first time since the listener was registered
-			String[] typeStringArray = new String[types.length];
-			for (int i = 0; i < types.length; i++) {
-				typeStringArray[i] = WbsStrings.capitalize(types[i].name());
-			}
-			allTypes = String.join(", ", typeStringArray);
+		String[] typeStringArray = new String[types.length];
+		for (int i = 0; i < types.length; i++) {
+			typeStringArray[i] = WbsStrings.capitalize(types[i].name());
+		}
+		allTypes = String.join(", ", typeStringArray);
 	//	}
 		return allTypes;
 	}
 	
-	private GameType getGameType(String typeString) { 
+	private GameType getGameType(String typeString) {
 		for (GameType type : types) {
-			if (type.toString().equals(typeString)) {
+			if (type.toString().equalsIgnoreCase(typeString)) {
 				return type;
 			}
 		}

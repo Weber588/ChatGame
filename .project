@@ -14,4 +14,11 @@
 	<natures>
 		<nature>org.eclipse.jdt.core.javanature</nature>
 	</natures>
+	<linkedResources>
+		<link>
+			<name>Utils</name>
+			<type>2</type>
+			<location>C:/Users/idont/Desktop/SingleSpigot/plugins/Utils</location>
+		</link>
+	</linkedResources>
 </projectDescription>
