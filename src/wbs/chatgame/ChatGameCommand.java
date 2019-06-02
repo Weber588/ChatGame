@@ -78,7 +78,8 @@ public class ChatGameCommand implements CommandExecutor {
 			break;
 		case "SKIP":
 			if (checkPermission(sender, "chatgame.admin.skip")) {
-				
+				sendMessage("Skipping round", sender);
+				Game.skipRound();
 			}
 			break;
 		case "NEXT":

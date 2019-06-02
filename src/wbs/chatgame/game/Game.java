@@ -232,6 +232,12 @@ public class Game {
 	}
 
 	/**************************** ROUNDS ****************************/
+	public static void skipRound() {
+		endRound();
+		Bukkit.getScheduler().cancelTask(currentTimerID); // Cancel the round timer that will start next round
+		ChatGame.broadcast("This round was skipped. New question:");
+		nextRound();
+	}
 	
 	private static void endRound() {
 		endRound("Nobody");
@@ -422,7 +428,8 @@ public class Game {
 		answers.add(answer); // Add before scrambling.
 		scrambled = scrambleString(scrambled);
 		
-		ChatGame.broadcast("Unscramble \"&h" + scrambled + "&r\" for " + pointsDisplay(currentPoints) + "!" + challengeString);
+		currentQuestion = "Unscramble \"&h" + scrambled + "&r\" for " + pointsDisplay(currentPoints) + "!" + challengeString;
+		ChatGame.broadcast(currentQuestion);
 
 		int secondsUntilHint = (int) currentSettings.getOption("seconds-until-hint");
 		if (secondsUntilHint == 0) {
@@ -625,7 +632,8 @@ public class Game {
 		}
 		answers.add(answerString);
 		
-		ChatGame.broadcast("Solve \"&h" + questionString + "&r\" " + operationsPrompt + "for " + pointsDisplay(points) + "!");
+		currentQuestion = "Solve \"&h" + questionString + "&r\" " + operationsPrompt + "for " + pointsDisplay(points) + "!";
+		ChatGame.broadcast(currentQuestion);
 		
 		currentTimerID = new BukkitRunnable() {
             public void run() {
@@ -680,7 +688,8 @@ public class Game {
 			case "ANSWER-LAST-ROUND":
 				answers.addAll(lastAnswers);
 				currentPoints = 2;
-				ChatGame.broadcast("What was the answer to the previous question? (2 points)");
+				currentQuestion = "What was the answer to the previous question? (2 points)";
+				ChatGame.broadcast(currentQuestion);
 				break;
 			case "WON-LAST-ROUND":
 				if (lastWinner.equals("Nobody")) {
@@ -693,17 +702,19 @@ public class Game {
 					answers.add(lastWinner);
 				}
 				currentPoints = 2;
-				ChatGame.broadcast("Who won last round? (2 points)");
+				currentQuestion = "Who won last round? (2 points)";
+				ChatGame.broadcast(currentQuestion);
 				break;
 			case "PLAYERS-ONLINE":
 				answers.add(Integer.toString(Bukkit.getOnlinePlayers().size()));
 				currentPoints = 1;
-				ChatGame.broadcast("How many players are online right now? (1 points)");
+				currentQuestion = "How many players are online right now? (1 points)";
+				ChatGame.broadcast(currentQuestion);
 				break;
 			default:
 				logger.warning("An unknown challenge was parsed into the " + currentType + " game (" + challenge + ")");
 				if (challengeFailCount > 15) {
-					ChatGame.broadcast("&wAn error occurred. The trivia game type has been disabled; please inform an operator.");
+					ChatGame.broadcast("&wAn error occurred; please inform an operator.");
 				} else {
 					trivia(++challengeFailCount); // Retry
 				}
@@ -727,8 +738,8 @@ public class Game {
 		
 			int points = trivia.get(chosenQuestion);
 			currentPoints = points;
-	
-			ChatGame.broadcast(chosenQuestion.getQuestion() + " (" + pointsDisplay(points) + ")");
+			currentQuestion = chosenQuestion.getQuestion() + " (" + pointsDisplay(points) + ")";
+			ChatGame.broadcast(currentQuestion);
 		}
 		
 		currentTimerID = new BukkitRunnable() {
@@ -762,7 +773,9 @@ public class Game {
 				points++;
 			}
 		}
-		ChatGame.broadcast("Quick! Type \"&h" + phrase + "&r\" " + challengeString + "for " + pointsDisplay(points) + "!");
+		
+		currentQuestion = "Quick! Type \"&h" + phrase + "&r\" " + challengeString + "for " + pointsDisplay(points) + "!";
+		ChatGame.broadcast(currentQuestion);
 		
 		currentTimerID = new BukkitRunnable() {
             public void run() {
@@ -815,7 +828,8 @@ public class Game {
 
 		int amount = Math.max(1, Math.round(phrase.length()/3));
 		String original = reveal(conceal(phrase), phrase, amount);
-		ChatGame.broadcast("Guess the word! \"&h" + original + "&r\" (" + pointsDisplay(currentPoints) + ")" + challengeString);
+		currentQuestion = "Guess the word! \"&h" + original + "&r\" (" + pointsDisplay(currentPoints) + ")" + challengeString;
+		ChatGame.broadcast(currentQuestion);
 		
 		final String finalAnswer = phrase;
 		
@@ -843,7 +857,8 @@ public class Game {
             		if (currentPoints > 1 && amount > 1) {
                 		currentPoints--;
             		}
-        			ChatGame.broadcast(amountDisplay + "! \"&h" + currentString + "&r\" (" + pointsDisplay(currentPoints) + ")");
+            		currentQuestion = amountDisplay + "! \"&h" + currentString + "&r\" (" + pointsDisplay(currentPoints) + ")";
+        			ChatGame.broadcast(currentQuestion);
             	}
             }
         }.runTaskTimer(pl, delay, delay).getTaskId();
