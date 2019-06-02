@@ -1,0 +1,15 @@
+main: wbs.chatgame.ChatGame
+name: ChatGame
+version: 0.1.0
+api-version: 1.13
+author: Weber588
+description: Chat-based games with points and rewards
+commands:
+  chatgame:
+    aliases: [cg]
+    description: Interact with the ChatGame
+    usage: /chatgame help
+  guess:
+    aliases: [g]
+    description: Guess in the ChatGame
+    usage: /guess <guess>

@@ -1,0 +1,62 @@
+math:
+  options:
+    # Whether or not the math problems can have 0 as a part of it.
+    allow-zero: false
+
+    # Whether the game should use left to right math, or use order of operations (PEDMAS/BOMDAS)
+    order-of-operations: false
+
+    # Alternatively, set this to true do both. If true, the game will choose at random to use
+    # either order of operations, or left to right (and will tell the players which is used)
+    # (If this is true, the value above will be ignored)
+    use-both: false
+
+    # Extra points may be added when a question is using order of operations if the question is
+    # difficult enough. This will have no effect if use-both is false.
+    pedmas-bonus: false
+
+  # Types of question affect what kinds of math problems will appear.
+  # Some defaults have been provided, but more can be added to allow you to customize difficulty
+  types:
+    # Here you can define types of math problems that will appear. Points are
+    # generated automatically based on:
+    # - number of operations done
+    # - size of the number when operations are done
+    # - whether or not pedmas-bonus is enabled (see above)
+    # - which operations were used (/ > * > +,-)
+
+    single-digit-mix:
+      # Chance of this question appearing
+      chance: 85
+      # The maximum number that may appear
+      max-value: 9
+      # Minimum amount of numbers included
+      min-numbers: 3
+      # Maximum amount of numbers included
+      max-numbers: 7
+      # Set this to true to include addition
+      include-addition: true
+      # Set this to true to include subtraction
+      include-subtraction: true
+      # Set this to true to include multiplication
+      include-multiplication: true
+      # Set this to true to include division
+      # NOTE: ALL divided numbers will be ROUNDED (not truncated) to 2 decimal places. 
+      include-division: false
+
+    two-digits-mix:
+      chance: 10
+      max-value: 99
+      min-numbers: 2
+      max-numbers: 4
+      # You can leave out include options:
+      # Defaults are addition and subtraction enabled, multiplication and division disabled.
+
+    single-digit-division:
+      chance: 10
+      max-value: 9
+      min-numbers: 2
+      max-numbers: 2
+      include-addition: false
+      include-subtraction: false
+      include-division: true

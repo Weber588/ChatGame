@@ -1,0 +1,42 @@
+trivia:
+  options:
+    include-challenges: true
+    challenges:
+      # Chance that a trivia question will be replaced with
+      # "Who is at rank [1-5] in the all time ranking for ChatGame?"
+      position-all-time: 2
+
+      # Same as above, but with weekly ranking instead.
+      position-weekly: 2
+
+      # Chance that a trivia question will be replaced with "Who won last round?"
+      won-last-round: 2
+
+      # Chance that a trivia question will be replaced with 
+      # "What was the answer to the previous question?"
+      answer-last-round: 2
+
+      # Chance that a trivia question will be replaced with "How many players are online right now?"
+      players-online: 2
+
+  questions:
+    # To add a question, give it a name, then provide the question, a list of possible answers,
+    # and the amount of points it's worth. Some examples are provided.
+
+    # QUESTIONS DO NOT AUTOMATICALLY HAVE A QUESTION MARK!
+    # This is so you can phrase questions differently!
+    # Example: "Name a mob you can find in the nether."
+
+    Notch: # The UNIQUE name of the question - You can use anything here, including numbers!
+      question: 'What is the screen-name of Markus Persson?' # The question to display
+      answers: # A list of answers - Any of these will be accepted, but only the one answered appears.
+      - 'Notch' # If it only has one answer, just put it here!
+      points: 1
+
+    RarestOre:
+      question: 'What is the rarest ore in Minecraft?'
+      answers: # You can list multiple answers if people might answer differently!
+      - 'Emerald' 
+      - 'Emeralds' 
+      - 'Emerald Ore' 
+      points: 2

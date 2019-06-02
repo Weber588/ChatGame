@@ -1,0 +1,78 @@
+# Please note that all chances are percentages.
+
+
+# This section affects numerous game types.
+general:
+  # You can change this to change what the chatgame looks like.
+  message-prefix: '&7[&bChatGame&7]'
+
+  # Use a minecraft colour code here to pick the message colour
+  message-colour: 'a' 
+
+  # Use a minecraft colour code to choose the highlight colour.
+  # This is used for things in quotes in questions - For example, a question may be:
+  # Guess the word! "__a_t_" (1 point)
+  # In this case, the __a_t_ would be the highlight colour, 
+  # and everything else would be the message colour
+  highlight-colour: 'b'
+
+  # Incorrect guesses (if guess command is toggled below) and errors will be this colour.
+  error-colour: 'c'
+
+  # Whether or not to require /guess (/g) for players to guess. Enable this to reduce spam.
+  # When disabled, no error messages will be sent.
+  guess-command: false
+
+  # The number of seconds between the end of one round and the start of the next.
+  seconds-between-rounds: 180
+
+  durations: # How long each round lasts in SECONDS
+    unscramble: 180
+    math: 120
+    trivia: 180
+    quicktype: 30
+    # IMPORTANT: This is how many seconds there are until new letters are revealed.
+    # On average there are 3-5 rounds per reveal game.
+    reveal: 30
+
+  # Choose how frequently a given category comes up.
+  # To disable a game, set the percentage to 0.
+  rates:
+    unscramble: 20
+    math: 20
+    trivia: 20
+    quicktype: 20
+    reveal: 20
+
+  # Set this to false to disable ALL challenges regardless of the individual game settings.
+  enable-challenges: true
+
+  enable-rewards: true
+  rewards:
+    # Random rewards occur with a chance for every question answered over a certain amount of points.
+    random:
+      givemoney10: # This is the name of the reward - It isn't used, but needs to be unique.
+        chance: 10 
+        points-needed: 3 # The question answered must have been worth this many points (or more).
+        money: 5 
+        message: 'Congratulations!' 
+        commands: 
+        - 'give %player% minecraft:iron_ingot 1'
+        - 'say This is the default ChatGame reward!'
+        broadcast: '%player% just got some money and an iron ingot!'
+
+    # Recurring rewards occur every X points. An example has been provided.
+    recurring:
+      givemoney25:
+        points-needed: 25 # The reward will run every 25 points
+        money: 25
+        message: '25 more points! Good job!' # Send a message to the player!
+
+    # Achievement rewards occur when a milestone is reached.
+    # For example, when a player reaches 100 points you may want to reward them with
+    # a permission or an item. This can be done here.
+    achievement:
+      100milestone:
+        points-milestone: 100 # When the player reaches 100 points
+        broadcast: '%player% has reached 100 points! Woo!'
+        money: 100

@@ -1,0 +1,59 @@
+reveal:
+  options:
+    # -- MATERIAL OPTIONS -- #
+    # These do nothing if the random-material is not enabled (see generation section)
+    # Turn this on to include wool, terracotta, stained glass, concrete, dyes etc
+    include-coloured: false
+    # Turn this on to include slabs, stairs, fences, doors etc
+    include-variations: false
+    # Turn this on to include armour types (False shows "helmet", but not "golden helmet")
+    verbose-armour: false
+    # Turn this on to include tool types (False shows "pickaxe", but not "wooden pickaxe")
+    verbose-tools: false
+
+    # Chance to use a random minecraft word instead of a provided word.
+    # Points are determined from length and features, and may vary somewhat.
+    generation-chance: 90 # The chance to generate a word instead of using a provided one
+    generation:
+      # Materials are blocks and items
+      random-material: 80
+      # Common mobs (anything from a spawn egg) as well as Ender Dragon, Wither, and Iron Golem
+      random-mob: 15
+      # Any enchantment (no level)
+      random-enchantment: 4
+      # A biome (Please note that some biome names are obscure - i.e. Modified Wooded Badlands Plateau)
+      random-biome: 1
+
+  # cAsE SeNsItIvE! Words do not auto capitalize - you need to do this yourself!
+  words:
+  # Use the format word:points
+  - Minecraft:1
+  - Speed:1
+  - Strength:1
+  - Poison:1
+
+  - Levitation:2
+  - Overworld:2
+  - End City:2
+  - Stronghold:2
+  - Spectator:2
+  - Witch Hut:2
+  - Nausea:2
+  - Blindness:2
+  - Slowness:2
+  - Weakness:2
+  - Leaping:2
+
+  - Charged Creeper:4
+  - Spider Jockey:4
+  - Blacksmith Villager:4
+  - Thick Potion:4
+  - Mundane Potion:4
+  - Awkward Potion:4
+  - Giant Mushroom:4
+  - Ocean Monument:4
+  - Abandoned Mineshaft:4
+  - Night vision:4
+  - Regeneration:4
+  - Invisibility:4
+  - Water Breathing:4

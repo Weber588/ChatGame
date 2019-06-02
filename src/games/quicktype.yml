@@ -1,0 +1,57 @@
+quicktype:
+  options:
+    # Whether or not answers must include case. (if true, "fmej" won't match "FMEJ")
+    match-case: true
+
+    include-challenges: true
+    challenges:
+      # Chance that users will be told to type the quicktype in reverse
+      backwards: 5
+
+  # Each character set is a list of possible letters that will be scrambled and then typed.
+  # Do not include spaces. Do not include " or '.
+  # Keep in mind that some users might use different keyboards and have harder times with some
+  # characters ($ € £ etc)
+  character-sets:
+  - ABCABCABC:1
+  - WOAAHHHHH:1
+  - WKMDP17:1
+  - VERHP52:1
+  - ZXCVBNXC:1
+  - ASDfgh:1
+  - JKLPOI:1
+  - UYTREW:1
+  - QWERTY:1
+  - AZQAZQ:1
+  - PLMPLM:1
+  - FKWMSP:1
+  - WMDKJA:1
+  - AMKWDJ:1
+  - AAAaaa:1
+  
+  - 4VH988B6:2
+  - VEHM0OO:2
+  - SEJ4VHY:2
+  - 2659JYIH:2
+  - 56367P88F:2
+  - 129DBY35:2
+  - 0000OOOQ:2
+  - 5555SSSS:2
+  - 8888BBBB:2
+  - -_-_-_-_:2
+  
+  - ASD123!#@:3
+  - GV~EK0M^@2:3
+  - ~Q@#42,>?">:3
+  - V!I?MP0MP:3
+  - M09^@2SK0:3
+  - QKI?32@2S:3
+  - 26@59IMP6*H:3
+  - 39K:~@59I:3
+  - 129^@5!~5:3
+  - I|![]I|![]111:3
+  - \\\\\\//////:3
+  - ^*()_+?<>`;""::3
+  - (({{}})):3
+  - ZXCVBNMZXCVBNM:3
+  - ;;;:::,,,...:3
