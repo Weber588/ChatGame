@@ -92,7 +92,7 @@ public class ChatGameCommand implements CommandExecutor {
 					if (next != null) {
 						Game.nextType(next);
 					} else {
-						sendMessage("Invalid game type; please choose from the following: &h" + allTypes, sender);
+						sendMessage("Invalid game type; please choose from the following: &h" + getTypesList(), sender);
 					}
 				}
 			}
@@ -105,7 +105,18 @@ public class ChatGameCommand implements CommandExecutor {
 	
 	private final GameType[] types = GameType.values(); // Doesn't need to be static since only one commandlistener object is created per instance - might as well be static
 	
-	private final String allTypes = WbsStrings.asList(types);
+	private String allTypes = null;
+	
+	private String getTypesList() {
+		if (allTypes == null) { // Only do this when the first time since the listener was registered
+			String[] typeStringArray = new String[types.length];
+			for (int i = 0; i < types.length; i++) {
+				typeStringArray[i] = types[i].name();
+			}
+			allTypes = String.join(", ", typeStringArray);
+		}
+		return allTypes;
+	}
 	
 	private GameType getGameType(String typeString) { 
 		for (GameType type : types) {
