@@ -233,8 +233,10 @@ public class Game {
 
 	/**************************** ROUNDS ****************************/
 	public static void skipRound() {
-		endRound();
-		Bukkit.getScheduler().cancelTask(currentTimerID); // Cancel the round timer that will start next round
+		if (inRound) {
+			endRound();
+		}
+		Bukkit.getScheduler().cancelTask(currentTimerID); // Cancel the current timer
 		ChatGame.broadcast("This round was skipped. New question:");
 		nextRound();
 	}

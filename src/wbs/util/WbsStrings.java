@@ -14,7 +14,7 @@ public abstract class WbsStrings {
 	}
 	
 	public static String capitalize(String str) {
-		String display = str.substring(1);
+		String display = str.substring(1).toLowerCase();
 		display = str.substring(0, 1).toUpperCase() + display;
 		return display;
 	}

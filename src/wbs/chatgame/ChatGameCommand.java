@@ -108,13 +108,13 @@ public class ChatGameCommand implements CommandExecutor {
 	private String allTypes = null;
 	
 	private String getTypesList() {
-		if (allTypes == null) { // Only do this when the first time since the listener was registered
+	//	if (allTypes == null) { // Only do this when the first time since the listener was registered
 			String[] typeStringArray = new String[types.length];
 			for (int i = 0; i < types.length; i++) {
-				typeStringArray[i] = types[i].name();
+				typeStringArray[i] = WbsStrings.capitalize(types[i].name());
 			}
 			allTypes = String.join(", ", typeStringArray);
-		}
+	//	}
 		return allTypes;
 	}
 	
