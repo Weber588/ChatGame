@@ -461,9 +461,9 @@ public class Game {
 	            			String start = answer.substring(0, 2);
 	            			if (answer.length() > 6) {
 	            				String end = answer.substring(answer.length() - 2);
-			            		ChatGame.broadcast("Hint: \"&h" + start + answer.substring(2, answer.length() - 2).replaceAll(".?", "_") + end + "&r\"");
+			            		ChatGame.broadcast("Hint: \"&h" + start + answer.substring(2, answer.length() - 3).replaceAll(".?", "_") + end + "&r\"");
 	            			} else {
-			            		ChatGame.broadcast("Hint: \"&h" + start + answer.substring(2, answer.length()).replaceAll(".?", "_") +"&r\"");
+			            		ChatGame.broadcast("Hint: \"&h" + start + answer.substring(2, answer.length() - 1).replaceAll(".?", "_") +"&r\"");
 	            			}
 	            		}
 	            	}
