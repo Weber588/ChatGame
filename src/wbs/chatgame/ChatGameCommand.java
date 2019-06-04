@@ -50,6 +50,7 @@ public class ChatGameCommand implements CommandExecutor {
 		
 		// Only check admin commands if they have one of them
 		if (checkAllPermissions(sender, "chatgame.admin")) {
+			boolean runStaffCommand = true; // Assume a command was run - default case changes to false. Then return if true.
 			switch (args[0].toUpperCase()) {
 			case "START":
 				if (checkPermission(sender, "chatgame.admin.start")) {
@@ -60,7 +61,7 @@ public class ChatGameCommand implements CommandExecutor {
 	
 					Game.start();
 				}
-				break;
+				return true;
 			case "STOP":
 				if (checkPermission(sender, "chatgame.admin.stop")) {
 					if (!Game.isRunning) {
@@ -70,7 +71,7 @@ public class ChatGameCommand implements CommandExecutor {
 	
 					Game.stop();
 				}
-				break;
+				return true;
 			case "RESTART":
 				if (checkPermission(sender, "chatgame.admin.restart")) {
 					if (!Game.isRunning) {
@@ -81,22 +82,26 @@ public class ChatGameCommand implements CommandExecutor {
 					Game.stop();
 					Game.start();
 				}
-				break;
+				return true;
 			case "RELOAD":
 				if (checkPermission(sender, "chatgame.admin.reload")) {
 					sendMessage("Reloading...", sender);
 					ChatGame.reload();
 					sendMessage("&hComplete.", sender);
 				}
-				break;
+				return true;
 			case "SKIP":
 				if (checkPermission(sender, "chatgame.admin.skip")) {
 					Game.skipRound();
 				}
-				break;
+				return true;
 			case "NEXT":
 				if (checkPermission(sender, "chatgame.admin.next")) {
-					if (length > 1) { // Omit "next "
+					switch (length) {
+					case 1:
+						sendMessage("Usage: &h/cg next <GameType>.&r Please use one of the following: &h" + getTypesList(), sender);
+						return true;
+					default:
 						GameType next = getGameType(args[1]); // Method to handle parsing String to Enum
 						if (next != null) {
 							Game.nextType(next);
@@ -106,12 +111,21 @@ public class ChatGameCommand implements CommandExecutor {
 						}
 					}
 				}
-				break;
-			default:
-				sendMessage(usage, sender);
+				return true;
+			}
+			
+			// Normal user commands
+			switch (args[0].toUpperCase()) {
+			case "STATS":
+			case "POINTS":
+				
 			}
 		}
 		return true;
+	}
+	
+	private void showStats(CommandSender sender, String lookup) {
+		
 	}
 	
 	private final GameType[] types = GameType.values(); // Doesn't need to be static since only one commandlistener object is created per instance - might as well be static
