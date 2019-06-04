@@ -26,6 +26,7 @@ import org.bukkit.scheduler.BukkitScheduler;
 import org.bukkit.scheduler.BukkitTask;
 
 import wbs.chatgame.ChatGame;
+import wbs.chatgame.player.PlayerData;
 import wbs.util.WbsStrings;
 
 public class Game {
@@ -207,6 +208,7 @@ public class Game {
 	}
 	
 	private static void correct(Player player, String answer) {
+		int seconds = (int) Duration.between(roundStartTime, LocalDateTime.now()).toMillis()/1000;
 		String prettyTime = prettyTime(Duration.between(roundStartTime, LocalDateTime.now()));
 		switch (currentType) {
 		case UNSCRAMBLE:
@@ -219,16 +221,18 @@ public class Game {
 			ChatGame.broadcast(player.getName() + " won in " + prettyTime + "!");
 		}
 		
+		PlayerData data = PlayerData.getPlayerData(player);
+		data.addWin(currentType, currentPoints, seconds);
+		
 		endRound(player.getName());
 	}
 	private static void incorrect(Player player) {
 		if (useGuessCommand) {
 			ChatGame.sendMessage("&wIncorrect.", player);
+
+			PlayerData data = PlayerData.getPlayerData(player);
+			data.addLoss(currentType); // Don't add incorrect if the guess command isn't required; otherwise chatting normally will affect scores
 		}
-		
-		/* TODO:
-		 * Add to incorrect player's incorrect score for the appropriate gametype
-		 */
 	}
 
 	/**************************** ROUNDS ****************************/

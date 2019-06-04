@@ -7,6 +7,8 @@ import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 
+import org.bukkit.entity.Player;
+
 import wbs.chatgame.game.GameType;
 
 public class PlayerData implements Serializable {
@@ -36,6 +38,9 @@ public class PlayerData implements Serializable {
 		}
 		
 		allPlayerData.put(username, this);
+	}
+	public static PlayerData getPlayerData(Player player) {
+		return getPlayerData(player.getName());
 	}
 	
 	public static PlayerData getPlayerData(String username) {
