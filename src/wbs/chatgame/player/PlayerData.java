@@ -39,6 +39,15 @@ public class PlayerData implements Serializable {
 		
 		allPlayerData.put(username, this);
 	}
+
+	public static boolean exists(Player player) {
+		return exists(player.getName());
+	}
+	
+	public static boolean exists(String username) {
+		return (allPlayerData.containsKey(username));
+	}
+	
 	public static PlayerData getPlayerData(Player player) {
 		return getPlayerData(player.getName());
 	}
