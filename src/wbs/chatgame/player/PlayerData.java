@@ -19,19 +19,22 @@ public class PlayerData implements Serializable {
 	 * Implement a transfer command to remap this
 	 */
 	private static Map<String, PlayerData> allPlayerData = new HashMap<>();
+	private static GameType[] gameTypes = GameType.values();
 	
-	private int totalPoints;
-	private int weekPoints;
+	private Map<GameType, Integer> totalPoints;
+	private Map<GameType, Integer> weekPoints;
+	
 	private Map<GameType, Integer> correct = new HashMap<>();
 	private Map<GameType, Integer> incorrect = new HashMap<>();
 	// Map of GameType to average seconds to answer that game type
 	private Map<GameType, Double> speed = new HashMap<>();
 	
 	private PlayerData(String username) {
-		totalPoints = 0;
-		weekPoints = 0;
 		
 		for (GameType type : GameType.values()) {
+			totalPoints.put(type, 0);
+			weekPoints.put(type, 0);
+			
 			correct.put(type, 0);
 			incorrect.put(type, 0);
 			speed.put(type, 0.0);
@@ -60,8 +63,8 @@ public class PlayerData implements Serializable {
 	}
 	
 	public void addWin(GameType type, int points, double seconds) {
-		totalPoints += points;
-		weekPoints += points;
+		totalPoints.put(type, totalPoints.get(type)+1);
+		weekPoints.put(type, weekPoints.get(type)+1);
 		int correctTotal = correct.get(type);
 		correct.put(type, correctTotal+1);
 		
@@ -74,10 +77,28 @@ public class PlayerData implements Serializable {
 	}
 	
 	public int getTotalPoints() {
-		return totalPoints;
+		int total = 0;
+		for (GameType checkType : gameTypes) {
+			total += totalPoints.get(checkType);
+		}
+		return total;
 	}
+	public int getTotalPoints(GameType type) {
+		if (type == null) {
+			return getTotalPoints();
+		}
+		return totalPoints.get(type);
+	}
+
 	public int getWeekPoints() {
-		return weekPoints;
+		int total = 0;
+		for (GameType checkType : gameTypes) {
+			total += weekPoints.get(checkType);
+		}
+		return total;
+	}
+	public int getWeekPoints(GameType type) {
+		return weekPoints.get(type);
 	}
 	public int getCorrect(GameType type) {
 		return correct.get(type);
