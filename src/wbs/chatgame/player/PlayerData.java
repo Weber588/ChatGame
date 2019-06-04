@@ -45,23 +45,32 @@ public class PlayerData implements Serializable {
 		return new PlayerData(username);
 	}
 	
+	public void addWin(GameType type, int points, double seconds) {
+		totalPoints += points;
+		weekPoints += points;
+		int correctTotal = correct.get(type);
+		correct.put(type, correctTotal+1);
+		
+		double newSpeed = ((speed.get(type) * correctTotal) + seconds) / (correctTotal + 1);
+		speed.put(type, newSpeed);
+	}
+	public void addLoss(GameType type) {
+		int incorrectTotal = incorrect.get(type);
+		incorrect.put(type, incorrectTotal+1);
+	}
+	
 	public int getTotalPoints() {
 		return totalPoints;
 	}
-	
 	public int getWeekPoints() {
 		return weekPoints;
 	}
-	
 	public int getCorrect(GameType type) {
 		return correct.get(type);
 	}
-	
-
 	public int getIncorrect(GameType type) {
 		return incorrect.get(type);
 	}
-	
 	public double getAverageSpeed(GameType type) {
 		return speed.get(type);
 	}
