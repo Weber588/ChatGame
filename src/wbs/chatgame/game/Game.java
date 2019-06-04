@@ -412,6 +412,10 @@ public class Game {
 		if (challenge != null) { // Use a challenge
 			switch (challenge.toLowerCase()) {
 			case "username":
+				Player random = randomOnlinePlayer();
+				if (random == null) {
+					break;
+				}
 				scrambled = randomOnlinePlayer().getName();
 				challengeString = " This scramble is an online players name!";
 				currentPoints = 2;
