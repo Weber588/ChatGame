@@ -3,6 +3,7 @@ package wbs.chatgame;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
+import org.bukkit.permissions.PermissionAttachmentInfo;
 
 import wbs.chatgame.game.Game;
 import wbs.chatgame.game.GameType;
@@ -25,6 +26,16 @@ public class ChatGameCommand implements CommandExecutor {
 		return true;
 	}
 	
+	private boolean checkAllPermissions(CommandSender sender, String permissionStartsWith) {
+		for (PermissionAttachmentInfo perm : sender.getEffectivePermissions()) {
+			if (perm.getPermission().startsWith(permissionStartsWith)) {
+				return true;
+			}
+		}
+		sendMessage("&wYou are lacking a child permission of: &h" + permissionStartsWith, sender);
+		return false;
+	}
+	
 	private final String usage = "Use &h/cg help&r for more information.";
 	
 	@Override
@@ -37,65 +48,68 @@ public class ChatGameCommand implements CommandExecutor {
 			return true;
 		}
 		
-		switch (args[0].toUpperCase()) {
-		case "START":
-			if (checkPermission(sender, "chatgame.admin.start")) {
-				if (Game.isRunning) {
-					sendMessage("&wThe game is already running!", sender);
-					return true;
+		// Only check admin commands if they have one of them
+		if (checkAllPermissions(sender, "chatgame.admin")) {
+			switch (args[0].toUpperCase()) {
+			case "START":
+				if (checkPermission(sender, "chatgame.admin.start")) {
+					if (Game.isRunning) {
+						sendMessage("&wThe game is already running!", sender);
+						return true;
+					}
+	
+					Game.start();
 				}
-
-				Game.start();
-			}
-			break;
-		case "STOP":
-			if (checkPermission(sender, "chatgame.admin.stop")) {
-				if (!Game.isRunning) {
-					sendMessage("&wThe game is not running!", sender);
-					return true;
+				break;
+			case "STOP":
+				if (checkPermission(sender, "chatgame.admin.stop")) {
+					if (!Game.isRunning) {
+						sendMessage("&wThe game is not running!", sender);
+						return true;
+					}
+	
+					Game.stop();
 				}
-
-				Game.stop();
-			}
-			break;
-		case "RESTART":
-			if (checkPermission(sender, "chatgame.admin.restart")) {
-				if (!Game.isRunning) {
-					sendMessage("&wThe game is not running! Use &h/cg start&w to start.", sender);
-					return true;
+				break;
+			case "RESTART":
+				if (checkPermission(sender, "chatgame.admin.restart")) {
+					if (!Game.isRunning) {
+						sendMessage("&wThe game is not running! Use &h/cg start&w to start.", sender);
+						return true;
+					}
+	
+					Game.stop();
+					Game.start();
 				}
-
-				Game.stop();
-				Game.start();
-			}
-			break;
-		case "RELOAD":
-			if (checkPermission(sender, "chatgame.admin.reload")) {
-				sendMessage("Reloading...", sender);
-				ChatGame.reload();
-				sendMessage("&hComplete.", sender);
-			}
-			break;
-		case "SKIP":
-			if (checkPermission(sender, "chatgame.admin.skip")) {
-				Game.skipRound();
-			}
-			break;
-		case "NEXT":
-			if (checkPermission(sender, "chatgame.admin.next")) {
-				if (length > 1) { // Omit "next "
-					GameType next = getGameType(args[1]); // Method to handle parsing String to Enum
-					if (next != null) {
-						Game.nextType(next);
-						sendMessage("The next game type will be " + WbsStrings.capitalize(args[1]), sender);
-					} else {
-						sendMessage("Invalid game type; please choose from the following: &h" + getTypesList(), sender);
+				break;
+			case "RELOAD":
+				if (checkPermission(sender, "chatgame.admin.reload")) {
+					sendMessage("Reloading...", sender);
+					ChatGame.reload();
+					sendMessage("&hComplete.", sender);
+				}
+				break;
+			case "SKIP":
+				if (checkPermission(sender, "chatgame.admin.skip")) {
+					Game.skipRound();
+				}
+				break;
+			case "NEXT":
+				if (checkPermission(sender, "chatgame.admin.next")) {
+					if (length > 1) { // Omit "next "
+						GameType next = getGameType(args[1]); // Method to handle parsing String to Enum
+						if (next != null) {
+							Game.nextType(next);
+							sendMessage("The next game type will be " + WbsStrings.capitalize(args[1]), sender);
+						} else {
+							sendMessage("Invalid game type; please choose from the following: &h" + getTypesList(), sender);
+						}
 					}
 				}
+				break;
+			default:
+				sendMessage(usage, sender);
 			}
-			break;
-		default:
-			sendMessage(usage, sender);
 		}
 		return true;
 	}
