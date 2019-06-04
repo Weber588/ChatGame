@@ -46,7 +46,6 @@ public class PlayerData implements Serializable {
 	public static boolean exists(Player player) {
 		return exists(player.getName());
 	}
-	
 	public static boolean exists(String username) {
 		return (allPlayerData.containsKey(username));
 	}
@@ -54,7 +53,6 @@ public class PlayerData implements Serializable {
 	public static PlayerData getPlayerData(Player player) {
 		return getPlayerData(player.getName());
 	}
-	
 	public static PlayerData getPlayerData(String username) {
 		if (allPlayerData.containsKey(username)) {
 			return allPlayerData.get(username);
@@ -108,6 +106,14 @@ public class PlayerData implements Serializable {
 	}
 	public double getAverageSpeed(GameType type) {
 		return speed.get(type);
+	}
+	
+	public static int getRank(Player player) {
+		return getRank(player.getName());
+	}
+	public static int getRank(String username) {
+		PlayerData data = getPlayerData(username);
+		return mainDataTree.getRank(data.getTotalPoints());
 	}
 }
 

@@ -7,6 +7,7 @@ import org.bukkit.permissions.PermissionAttachmentInfo;
 
 import wbs.chatgame.game.Game;
 import wbs.chatgame.game.GameType;
+import wbs.chatgame.player.PlayerData;
 import wbs.util.WbsStrings;
 
 public class ChatGameCommand implements CommandExecutor {
@@ -118,14 +119,63 @@ public class ChatGameCommand implements CommandExecutor {
 			switch (args[0].toUpperCase()) {
 			case "STATS":
 			case "POINTS":
+				switch (length) {
+				case 1:
+					sendMessage("Usage: &h/cg " + args[0].toLowerCase() + " <username> [GameType]", sender);
+					break;
+				case 2:
+					showStats(sender, args[1]);
+					break;
+				case 3:
+					GameType type = getGameType(args[2]);
+					if (getGameType(args[2]) != null) {
+						showStats(sender, args[1], type);
+					} else {
+						sendMessage("Invalid game type; please choose from the following: &h" + getTypesList(), sender);
+					}
+					break;
+				}
+				break;
+			case "":
 				
 			}
 		}
 		return true;
 	}
-	
+
 	private void showStats(CommandSender sender, String lookup) {
+		if (!PlayerData.exists(lookup)) {
+			sendMessage("&wThat player has not interacted with ChatGame yet.", sender);
+			return;
+		}
+		PlayerData data = PlayerData.getPlayerData(lookup);
 		
+		sendMessageNoPrefix("--== &h" + lookup + "&r ==--", sender);
+		sendMessageNoPrefix("Total points: &h" + data.getTotalPoints(), sender);
+		sendMessageNoPrefix("Weekly points: &h" + data.getWeekPoints(), sender);
+		sendMessageNoPrefix("Rank: &h" + data.getWeekPoints(), sender);
+		sendMessageNoPrefix("Weekly Rank: &h" + PlayerData.getRank(lookup), sender);
+	}
+	private void showStats(CommandSender sender, String lookup, GameType type) {
+		if (!PlayerData.exists(lookup)) {
+			sendMessage("&wThat player has not interacted with ChatGame yet.", sender);
+			return;
+		}
+		PlayerData data = PlayerData.getPlayerData(lookup);
+		
+		switch (type) {
+		case UNSCRAMBLE:
+			break;
+		case MATH:
+			break;
+		case TRIVIA:
+			break;
+		case QUICKTYPE:
+			break;
+		case REVEAL:
+			break;
+			
+		}
 	}
 	
 	private final GameType[] types = GameType.values(); // Doesn't need to be static since only one commandlistener object is created per instance - might as well be static
@@ -133,13 +183,13 @@ public class ChatGameCommand implements CommandExecutor {
 	private String allTypes = null;
 	
 	private String getTypesList() {
-	//	if (allTypes == null) { // Only do this when the first time since the listener was registered
-		String[] typeStringArray = new String[types.length];
-		for (int i = 0; i < types.length; i++) {
-			typeStringArray[i] = WbsStrings.capitalize(types[i].name());
+		if (allTypes == null) { // Only do this when the first time since the listener was registered
+			String[] typeStringArray = new String[types.length];
+			for (int i = 0; i < types.length; i++) {
+				typeStringArray[i] = WbsStrings.capitalize(types[i].name());
+			}
+			allTypes = String.join(", ", typeStringArray);
 		}
-		allTypes = String.join(", ", typeStringArray);
-	//	}
 		return allTypes;
 	}
 	
