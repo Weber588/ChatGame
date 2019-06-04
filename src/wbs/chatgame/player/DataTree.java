@@ -40,11 +40,17 @@ public class DataTree {
 	public int getRank(int checkPoints) {
 		int points = data.getTotalPoints();
 		if (points == checkPoints) {
+			if (right == null) {
+				return 0;
+			}
 			return right.size();
 		}
 		if (points < checkPoints) {
 			return right.getRank(checkPoints);
 		} else {
+			if (right == null) {
+				return left.getRank(checkPoints) + siblings.size();
+			}
 			return left.getRank(checkPoints) + siblings.size() +  right.size();
 		}
 	}
@@ -80,15 +86,16 @@ public class DataTree {
 	 */
 	public ArrayList<PlayerData> getByRank(int rank) {
 		int rightSize = right.size();
+		int sibSize = siblings.size();
 
 		if (rightSize == rank) {
 			return siblings;
 		}
 		if (rightSize > rank) { // The rank is a point value higher than this
 			return right.getByRank(rank);
-		} else if (rightSize + siblings.size() > rank) { // The rank is in the siblings
+		} else if (rightSize + sibSize > rank) { // The rank is in the siblings
 			return siblings;
 		}
-		return (left.getByRank(rank - (rightSize + siblings.size())));
+		return (left.getByRank(rank - (rightSize + sibSize)));
 	}
 }
