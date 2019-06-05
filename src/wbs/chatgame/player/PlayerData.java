@@ -35,8 +35,9 @@ public class PlayerData implements Serializable {
 	private static ArrayList<PlayerData> weekRanking = calculateRanks(RankType.WEEK);
 	private static LocalDateTime lastRefresh = LocalDateTime.now();
 	private static LocalDateTime lastWeekRefresh = LocalDateTime.now();
+	private static int playerSetSize = allPlayerData.size();
 	
-	private final static Duration refreshRate = Duration.parse("PT10M");
+	private final static Duration refreshRate = Duration.parse("PT2S");
 	
 	private String username;
 	private Map<GameType, Integer> totalPoints = new HashMap<>();
@@ -57,7 +58,8 @@ public class PlayerData implements Serializable {
 			incorrect.put(type, 0);
 			speed.put(type, 0.0);
 		}
-		
+		this.username = username;
+		playerSetSize++;
 		allPlayerData.put(username, this);
 	}
 
@@ -170,8 +172,9 @@ public class PlayerData implements Serializable {
 			}
 			
 			for (PlayerData data : ranking) {
-				if (data.getUsername().equalsIgnoreCase(username)) {
-					continue;
+				String user = data.getUsername();
+				if (user.equalsIgnoreCase(username)) {
+					break;
 				}
 				rank++;
 			}
@@ -183,12 +186,12 @@ public class PlayerData implements Serializable {
 			
 			for (PlayerData data : weekRanking) {
 				if (data.getUsername().equalsIgnoreCase(username)) {
-					continue;
+					break;
 				}
 				rank++;
 			}
 		}
-		return ++rank;
+		return playerSetSize - rank;
 	}
 }
 

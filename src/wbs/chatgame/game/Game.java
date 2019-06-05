@@ -594,7 +594,7 @@ public class Game {
 			usePedmas = false;
 		}
 		
-		int points = 1;
+		currentPoints = 1;
 		double total = numbers[0];
 		if (usePedmas) {
 			
@@ -604,7 +604,7 @@ public class Game {
 				switch (operation) {
 				case '+': 
 					total += numbers[i];
-					points += Math.max(0, (Math.round(Math.log10(Math.abs(total)))-2));
+					currentPoints += Math.max(0, (Math.round(Math.log10(Math.abs(total)))-2));
 					break;
 				case '-':
 					total -= numbers[i];
@@ -612,12 +612,12 @@ public class Game {
 				case '*':
 					total *= numbers[i];
 					if (total != 0) {
-						points += Math.max(0, (Math.round(Math.log10(Math.abs(total)))-1));
+						currentPoints += Math.max(0, (Math.round(Math.log10(Math.abs(total)))-1));
 					}
 					break;
 				case '/':
-					if (chance(200/points)) {
-						points++;
+					if (chance(200/currentPoints)) {
+						currentPoints++;
 					}
 					total /= numbers[i];
 					break;
@@ -642,7 +642,7 @@ public class Game {
 		}
 		answers.add(answerString);
 		
-		currentQuestion = "Solve \"&h" + questionString + "&r\" " + operationsPrompt + "for " + pointsDisplay(points) + "!";
+		currentQuestion = "Solve \"&h" + questionString + "&r\" " + operationsPrompt + "for " + pointsDisplay(currentPoints) + "!";
 		ChatGame.broadcast(currentQuestion);
 		
 		currentTimerID = new BukkitRunnable() {
