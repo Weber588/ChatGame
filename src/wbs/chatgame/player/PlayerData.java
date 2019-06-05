@@ -79,8 +79,8 @@ public class PlayerData implements Serializable {
 	}
 	
 	public void addWin(GameType type, int points, double seconds) {
-		totalPoints.put(type, totalPoints.get(type)+1);
-		weekPoints.put(type, weekPoints.get(type)+1);
+		totalPoints.put(type, totalPoints.get(type)+points);
+		weekPoints.put(type, weekPoints.get(type)+points);
 		int correctTotal = correct.get(type);
 		correct.put(type, correctTotal+1);
 		
