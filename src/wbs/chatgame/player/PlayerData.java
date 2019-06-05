@@ -2,16 +2,26 @@ package wbs.chatgame.player;
 
 import java.io.Serializable;
 import java.time.Duration;
+import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
+import java.util.TreeSet;
 
 import org.bukkit.entity.Player;
 
 import wbs.chatgame.game.GameType;
 
 public class PlayerData implements Serializable {
+	public static enum RankType {
+		TOTAL, WEEK;
+	}
+	
 	private static final long serialVersionUID = 735312392172726885L;
 
 	// Map of username to all associated data
@@ -20,9 +30,17 @@ public class PlayerData implements Serializable {
 	 */
 	private static Map<String, PlayerData> allPlayerData = new HashMap<>();
 	private static GameType[] gameTypes = GameType.values();
+
+	private static ArrayList<PlayerData> ranking = calculateRanks(RankType.TOTAL);
+	private static ArrayList<PlayerData> weekRanking = calculateRanks(RankType.WEEK);
+	private static LocalDateTime lastRefresh = LocalDateTime.now();
+	private static LocalDateTime lastWeekRefresh = LocalDateTime.now();
 	
-	private Map<GameType, Integer> totalPoints;
-	private Map<GameType, Integer> weekPoints;
+	private final static Duration refreshRate = Duration.parse("PT10M");
+	
+	private String username;
+	private Map<GameType, Integer> totalPoints = new HashMap<>();
+	private Map<GameType, Integer> weekPoints = new HashMap<>();
 	
 	private Map<GameType, Integer> correct = new HashMap<>();
 	private Map<GameType, Integer> incorrect = new HashMap<>();
@@ -107,13 +125,70 @@ public class PlayerData implements Serializable {
 	public double getAverageSpeed(GameType type) {
 		return speed.get(type);
 	}
-	
-	public static int getRank(Player player) {
-		return getRank(player.getName());
+	public String getUsername() {
+		return username;
 	}
-	public static int getRank(String username) {
-		PlayerData data = getPlayerData(username);
-		return mainDataTree.getRank(data.getTotalPoints());
+	
+	private static ArrayList<PlayerData> calculateRanks(RankType type) {
+		ArrayList<PlayerData> newDataSet = new ArrayList<>();
+		for (String username : allPlayerData.keySet()) {
+			newDataSet.add(allPlayerData.get(username));
+		}
+		lastRefresh = LocalDateTime.now();
+		
+		switch (type) {
+		case TOTAL:
+			newDataSet.sort(new Comparator<PlayerData>() {
+				@Override
+				public int compare(PlayerData first, PlayerData second) {
+					return first.getTotalPoints() - second.getTotalPoints();
+				}
+			});
+			break;
+		case WEEK:
+			newDataSet.sort(new Comparator<PlayerData>() {
+				@Override
+				public int compare(PlayerData first, PlayerData second) {
+					return first.getWeekPoints() - second.getWeekPoints();
+				}
+			});
+			break;
+		}
+		
+		return newDataSet;
+	}
+	
+	public static int getRank(Player player, RankType type) {
+		return getRank(player.getName(), type);
+	}
+	public static int getRank(String username, RankType type) {
+		int rank = 0;
+		switch (type) {
+		case TOTAL:
+			if (Duration.between(lastRefresh, LocalDateTime.now()).compareTo(refreshRate) > 0) {
+				ranking = calculateRanks(type);
+			}
+			
+			for (PlayerData data : ranking) {
+				if (data.getUsername().equalsIgnoreCase(username)) {
+					continue;
+				}
+				rank++;
+			}
+			break;
+		case WEEK:
+			if (Duration.between(lastWeekRefresh, LocalDateTime.now()).compareTo(refreshRate) > 0) {
+				weekRanking = calculateRanks(type);
+			}
+			
+			for (PlayerData data : weekRanking) {
+				if (data.getUsername().equalsIgnoreCase(username)) {
+					continue;
+				}
+				rank++;
+			}
+		}
+		return ++rank;
 	}
 }
 

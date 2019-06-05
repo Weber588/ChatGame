@@ -56,8 +56,9 @@ public class ChatGame extends JavaPlugin {
 	public static void sendMessageNoPrefix(String message, CommandSender sender) {
 		message = message.replaceAll("&r", "" + colour); // Replace default with the main colour
 		message = message.replaceAll("&h", "" + highlight); // Replace &h with the highlight colour
+		message = message.replaceAll("&w", "" + errorColour); // Replace &h with the highlight colour
 		message = ChatColor.translateAlternateColorCodes('&', message);
-		sender.sendMessage(message);
+		sender.sendMessage(colour + message);
 	}
 	
 	private static Map<String, FileConfiguration> configs;

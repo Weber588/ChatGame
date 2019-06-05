@@ -24,6 +24,9 @@ public class ChatGameCommand implements CommandExecutor {
 			sendMessage("&wYou are lacking the permission node: &h" + permission, sender);
 			return false;
 		}
+		if (sender.isOp()) {
+			return true;
+		}
 		return true;
 	}
 	
@@ -32,6 +35,9 @@ public class ChatGameCommand implements CommandExecutor {
 			if (perm.getPermission().startsWith(permissionStartsWith)) {
 				return true;
 			}
+		}
+		if (sender.isOp()) {
+			return true;
 		}
 		sendMessage("&wYou are lacking a child permission of: &h" + permissionStartsWith, sender);
 		return false;
@@ -153,8 +159,8 @@ public class ChatGameCommand implements CommandExecutor {
 		sendMessageNoPrefix("--== &h" + lookup + "&r ==--", sender);
 		sendMessageNoPrefix("Total points: &h" + data.getTotalPoints(), sender);
 		sendMessageNoPrefix("Weekly points: &h" + data.getWeekPoints(), sender);
-		sendMessageNoPrefix("Rank: &h" + data.getWeekPoints(), sender);
-		sendMessageNoPrefix("Weekly Rank: &h" + PlayerData.getRank(lookup), sender);
+		sendMessageNoPrefix("Rank: &h" + PlayerData.getRank(lookup, PlayerData.RankType.TOTAL), sender);
+		sendMessageNoPrefix("Weekly Rank: &h" + PlayerData.getRank(lookup, PlayerData.RankType.WEEK), sender);
 	}
 	private void showStats(CommandSender sender, String lookup, GameType type) {
 		if (!PlayerData.exists(lookup)) {
