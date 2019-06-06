@@ -7,7 +7,9 @@ import org.bukkit.permissions.PermissionAttachmentInfo;
 
 import wbs.chatgame.game.Game;
 import wbs.chatgame.game.GameType;
+import wbs.chatgame.game.TriviaQuestion;
 import wbs.chatgame.player.PlayerData;
+import wbs.chatgame.player.PlayerData.RankType;
 import wbs.util.WbsStrings;
 
 public class ChatGameCommand implements CommandExecutor {
@@ -47,7 +49,7 @@ public class ChatGameCommand implements CommandExecutor {
 	
 	@Override
 	public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
-		
+
 		int length = args.length;
 		
 		if (length == 0) {
@@ -119,6 +121,40 @@ public class ChatGameCommand implements CommandExecutor {
 					}
 				}
 				return true;
+			case "CUSTOM":
+				if (checkPermission(sender, "chatgame.admin.custom")) {
+					switch (length) {
+					case 1:
+						sendMessage("Usage: &h/cg custom <points> <question> -a <answer>", sender);
+						sendMessage("(You can list answers with \", \")", sender);
+						return true;
+					default:
+						// Ignore first 
+						String[] newArgs = new String[args.length - 2]; // Not keeping "custom" or points
+						for (int i = 0; i < args.length - 2; i++) {
+							newArgs[i] = args[i+2];
+						}
+						// custom == null if no -a was present.
+						TriviaQuestion custom = parseCustom(String.join(" ", newArgs));
+						
+						if (custom == null) {
+							sendMessage("Usage: &h/cg custom <points> <question> -a <answer>", sender);
+							return true;
+						}
+						int points;
+						try {
+							points = Integer.parseInt(args[1]);
+						} catch (NumberFormatException e) {
+							sendMessage("&wPoints must be an integer.", sender);
+							return true;
+						}
+						Game.setCustom(custom, points);
+						sendMessage("Question will be: " + custom.getQuestion(), sender);
+						sendMessage("Answers can be: " + custom.getAnswers().toString(), sender);
+					}
+					
+				}
+				return true;
 			}
 			
 			// Normal user commands
@@ -127,7 +163,7 @@ public class ChatGameCommand implements CommandExecutor {
 			case "POINTS":
 				switch (length) {
 				case 1:
-					sendMessage("Usage: &h/cg " + args[0].toLowerCase() + " <username> [GameType]", sender);
+					showStats(sender, sender.getName());
 					break;
 				case 2:
 					showStats(sender, args[1]);
@@ -142,11 +178,47 @@ public class ChatGameCommand implements CommandExecutor {
 					break;
 				}
 				break;
-			case "":
-				
+			case "LEADERBOARD":
+			case "TOP":
+				int amount;
+				switch (length) {
+				case 1:
+					amount = 5;
+					break;
+				default:
+					try {
+						amount = Integer.parseInt(args[1]);
+					} catch (NumberFormatException e) {
+						sendMessage("Usage: &b/cg top [int]", sender);
+						return true;
+					}
+				}
+				PlayerData[] top = PlayerData.getTopN(amount, RankType.TOTAL);
+				sendMessageNoPrefix("--== &hTop " + amount + "&r ==--", sender);
+				for (int i = 0; i < amount; i++) {
+					if (top[i] != null) {
+						sendMessageNoPrefix((i+1) + ". &h" + top[i].getUsername() + "&r: " + top[i].getTotalPoints(), sender);
+					}
+				}
 			}
 		}
 		return true;
+	}
+	
+	private TriviaQuestion parseCustom(String phrase) {
+		int index = phrase.indexOf(" -a ");
+		if (index == -1) {
+			return null;
+		}
+		String question = phrase.substring(0, index);
+		TriviaQuestion custom = new TriviaQuestion(question);
+		
+		String answersString = phrase.substring(index+4);
+		for (String answer : answersString.split(", ")) {
+			custom.addAnswer(answer);
+		}
+		
+		return custom;
 	}
 
 	private void showStats(CommandSender sender, String lookup) {

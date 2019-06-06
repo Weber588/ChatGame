@@ -143,7 +143,7 @@ public class PlayerData implements Serializable {
 			newDataSet.sort(new Comparator<PlayerData>() {
 				@Override
 				public int compare(PlayerData first, PlayerData second) {
-					return first.getTotalPoints() - second.getTotalPoints();
+					return second.getTotalPoints() - first.getTotalPoints();
 				}
 			});
 			break;
@@ -151,13 +151,51 @@ public class PlayerData implements Serializable {
 			newDataSet.sort(new Comparator<PlayerData>() {
 				@Override
 				public int compare(PlayerData first, PlayerData second) {
-					return first.getWeekPoints() - second.getWeekPoints();
+					return second.getWeekPoints() - first.getWeekPoints();
 				}
 			});
 			break;
 		}
 		
 		return newDataSet;
+	}
+	
+	public static PlayerData[] getTopN(int n, RankType type) {
+		int rank = 0;
+		PlayerData[] topN = new PlayerData[n];
+		switch (type) {
+		case TOTAL:
+			if (Duration.between(lastRefresh, LocalDateTime.now()).compareTo(refreshRate) > 0) {
+				ranking = calculateRanks(type);
+			}
+			
+			for (PlayerData data : ranking) {
+				if (rank == n) {
+					break;
+				}
+				topN[rank] = data;
+				rank++;
+			}
+			break;
+		case WEEK:
+			if (Duration.between(lastWeekRefresh, LocalDateTime.now()).compareTo(refreshRate) > 0) {
+				weekRanking = calculateRanks(type);
+			}
+	
+			for (PlayerData data : weekRanking) {
+				if (rank == n) {
+					break;
+				}
+				topN[rank] = data;
+				rank++;
+			}
+		}
+		if (rank < n) {
+			for (int i = rank; i < n; i++) {
+				topN[i] = null;
+			}
+		}
+		return topN;
 	}
 	
 	public static int getRank(Player player, RankType type) {
@@ -191,7 +229,7 @@ public class PlayerData implements Serializable {
 				rank++;
 			}
 		}
-		return playerSetSize - rank;
+		return ++rank;
 	}
 }
 
