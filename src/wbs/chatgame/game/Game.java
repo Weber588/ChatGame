@@ -809,7 +809,7 @@ public class Game {
 			case "PLAYERS-ONLINE":
 				answers.add(Integer.toString(Bukkit.getOnlinePlayers().size()));
 				currentPoints = 1;
-				currentQuestion = "How many players are online right now? (1 points)";
+				currentQuestion = "How many players are online right now? (1 point)";
 				ChatGame.broadcast(currentQuestion);
 				break;
 			default:
