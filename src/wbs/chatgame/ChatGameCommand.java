@@ -163,7 +163,16 @@ public class ChatGameCommand implements CommandExecutor {
 				switch (length) {
 				case 1:
 					help(sender, 1);
+					break;
+				default:
+					try {
+						help(sender, Integer.parseInt(args[1]));
+					} catch (NumberFormatException e) {
+						sendMessage("Usage: &b/cg help [page number]", sender);
+						return true;
+					}
 				}
+				
 				break;
 			case "INFO":
 				switch (length) {
@@ -178,8 +187,8 @@ public class ChatGameCommand implements CommandExecutor {
 						sendMessage("Invalid game type; please choose from the following: &h" + getTypesList(), sender);
 					}
 				}
-				break;
 				
+				break;
 			case "STATS":
 			case "POINTS":
 				switch (length) {
@@ -289,8 +298,8 @@ public class ChatGameCommand implements CommandExecutor {
 			sendMessageNoPrefix("&h/cg info [category]&r:", sender);
 			sendMessageNoPrefix("View details about a category.", sender);
 			break;
-		case 2:
-			
+		default:
+			help(sender, 1);
 		}
 	}
 	

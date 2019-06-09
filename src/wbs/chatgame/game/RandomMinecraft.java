@@ -1,6 +1,8 @@
 package wbs.chatgame.game;
 
+import java.util.Map;
 import java.util.Random;
+import java.util.Set;
 
 import org.bukkit.Material;
 import org.bukkit.block.Biome;
@@ -193,4 +195,109 @@ public class RandomMinecraft {
 	public static String getRandomBiome() {
 		return biomes[nextBiome()].name().toLowerCase().replace('_', ' ');
 	}
+	
+	/******************************************************/
+
+	private static String[] scrambleWords;
+	private static int[] scrambleOrder;
+	private static int scrambleCount = 0;
+	
+	public static void setUnscramble(Map<String, Integer> unscramble) {
+		int size = unscramble.size();
+		Set<String> words = unscramble.keySet();
+		String[] wordArray = new String[size];
+		wordArray = words.toArray(wordArray);
+		
+		scrambleWords = wordArray;
+		scrambleOrder = shuffleArray(newOrders(size));
+	}
+
+	private static TriviaQuestion[] triviaWords;
+	private static int[] triviaOrder;
+	private static int triviaCount = 0;
+	
+	public static void setTrivia(Map<TriviaQuestion, Integer> trivia) {
+		int size = trivia.size();
+		Set<TriviaQuestion> words = trivia.keySet();
+		TriviaQuestion[] wordArray = new TriviaQuestion[size];
+		wordArray = words.toArray(wordArray);
+		
+		triviaWords = wordArray;
+		triviaOrder = shuffleArray(newOrders(size));
+	}
+
+	private static String[] quicktypeWords;
+	private static int[] quicktypeOrder;
+	private static int quicktypeCount = 0;
+	
+	public static void setQuicktype(Map<String, Integer> quicktype) {
+		int size = quicktype.size();
+		Set<String> words = quicktype.keySet();
+		String[] wordArray = new String[size];
+		wordArray = words.toArray(wordArray);
+		
+		quicktypeWords = wordArray;
+		quicktypeOrder = shuffleArray(newOrders(size));
+	}
+
+	private static String[] revealWords;
+	private static int[] revealOrder;
+	private static int revealCount = 0;
+	
+	public static void setReveal(Map<String, Integer> reveal) {
+		int size = reveal.size();
+		Set<String> words = reveal.keySet();
+		String[] wordArray = new String[size];
+		wordArray = words.toArray(wordArray);
+		
+		revealWords = wordArray;
+		revealOrder = shuffleArray(newOrders(size));
+	}
+	
+	
+	public static String getTypeWord(GameType type) {
+		String word = null;
+		switch (type) {
+		case UNSCRAMBLE:
+			scrambleCount++;
+			if (scrambleCount >= scrambleWords.length) {
+				scrambleCount = 0;
+				shuffleArray(scrambleOrder);
+			}
+			return scrambleWords[scrambleOrder[scrambleCount]];
+			
+		case QUICKTYPE:
+			quicktypeCount++;
+			if (quicktypeCount >= quicktypeWords.length) {
+				quicktypeCount = 0;
+				shuffleArray(quicktypeOrder);
+			}
+			return quicktypeWords[quicktypeOrder[quicktypeCount]];
+			
+		case REVEAL:
+			revealCount++;
+			if (revealCount >= revealWords.length) {
+				revealCount = 0;
+				shuffleArray(revealOrder);
+			}
+			return revealWords[revealOrder[revealCount]];
+			
+		default:
+			word = null;
+		}
+		
+		return word;
+	}
+	
+	public static TriviaQuestion randomTrivia() {
+		triviaCount++;
+		if (triviaCount >= triviaWords.length) {
+			triviaCount = 0;
+			shuffleArray(triviaOrder);
+		}
+		
+		return triviaWords[triviaOrder[triviaCount]];
+	}
+	
+	
 }
