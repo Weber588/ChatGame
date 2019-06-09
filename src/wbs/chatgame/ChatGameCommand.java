@@ -159,6 +159,27 @@ public class ChatGameCommand implements CommandExecutor {
 			
 			// Normal user commands
 			switch (args[0].toUpperCase()) {
+			case "HELP":
+				switch (length) {
+				case 1:
+					help(sender, 1);
+				}
+				break;
+			case "INFO":
+				switch (length) {
+				case 1:
+					sendMessage("Usage: &h/cg info [category]&r. Please choose from the following: &h" + getTypesList(), sender);
+					break;
+				default:
+					GameType type = getGameType(args[1]);
+					if (type != null) {
+						info(sender, type);
+					} else {
+						sendMessage("Invalid game type; please choose from the following: &h" + getTypesList(), sender);
+					}
+				}
+				break;
+				
 			case "STATS":
 			case "POINTS":
 				switch (length) {
@@ -168,9 +189,9 @@ public class ChatGameCommand implements CommandExecutor {
 				case 2:
 					showStats(sender, args[1]);
 					break;
-				case 3:
+				default:
 					GameType type = getGameType(args[2]);
-					if (getGameType(args[2]) != null) {
+					if (type != null) {
 						showStats(sender, args[1], type);
 					} else {
 						sendMessage("Invalid game type; please choose from the following: &h" + getTypesList(), sender);
@@ -203,6 +224,74 @@ public class ChatGameCommand implements CommandExecutor {
 			}
 		}
 		return true;
+	}
+	
+	private void info(CommandSender sender, GameType category) {
+		sendMessageNoPrefix("---=== &h" + category.toString() + "&r ===---", sender);
+		switch (category) {
+		case UNSCRAMBLE:
+			sendMessageNoPrefix("&hSummary:", sender);
+			sendMessageNoPrefix("A random word will have its letters rearranged, and you will be given this new sequence of letters.", sender);
+
+			sendMessageNoPrefix("&hGoal:", sender);
+			sendMessageNoPrefix("Guess the word by rearranging the letters.", sender);
+			break;
+			
+		case MATH:
+			sendMessageNoPrefix("&hSummary:", sender);
+			sendMessageNoPrefix("An equation will be automatically generated that you may need to solve in a unique way.", sender);
+
+			sendMessageNoPrefix("&hGoal:", sender);
+			sendMessageNoPrefix("Solve the equation, rounded to 2 decimal places.", sender);
+			break;
+			
+		case TRIVIA:
+			sendMessageNoPrefix("&hSummary:", sender);
+			sendMessageNoPrefix("A random question is asked. These questions are added by an admin, and can be anything they choose!", sender);
+
+			sendMessageNoPrefix("&hGoal:", sender);
+			sendMessageNoPrefix("Answer the question provided - There can be multiple answers!", sender);
+			break;
+
+		case QUICKTYPE:
+			sendMessageNoPrefix("&hSummary:", sender);
+			sendMessageNoPrefix("You will be given a random set of letters that you need to type faster than anyone else.", sender);
+
+			sendMessageNoPrefix("&hGoal:", sender);
+			sendMessageNoPrefix("Answer before anyone else has a chance: Speed is the only challenge here!", sender);
+			break;
+			
+		case REVEAL:
+			sendMessageNoPrefix("&hSummary:", sender);
+			sendMessageNoPrefix("You are given a word that has been concealed except for a few letters, and more letters are revealed over time!", sender);
+
+			sendMessageNoPrefix("&hGoal:", sender);
+			sendMessageNoPrefix("Guess the word with as few letters as you can: The more letters that are revealed, the lower the points!", sender);
+			break;
+		}
+	}
+	
+	private void help(CommandSender sender, int page) {
+		switch (page) {
+		case 1:
+			sendMessageNoPrefix("&h/cg help [page]&r:", sender);
+			sendMessageNoPrefix("Display this and other help screens.", sender);
+			
+			sendMessageNoPrefix("&h/cg stats [player] [category]&r:", sender);
+			sendMessageNoPrefix("View your own or another players points/ranks.", sender);
+
+			sendMessageNoPrefix("&h/cg top [amount]&r:", sender);
+			sendMessageNoPrefix("View the top players in the all time ranking.", sender);
+
+			sendMessageNoPrefix("&h/cg week [amount]&r:", sender);
+			sendMessageNoPrefix("View the top players in the weekly ranking.", sender);
+			
+			sendMessageNoPrefix("&h/cg info [category]&r:", sender);
+			sendMessageNoPrefix("View details about a category.", sender);
+			break;
+		case 2:
+			
+		}
 	}
 	
 	private TriviaQuestion parseCustom(String phrase) {
