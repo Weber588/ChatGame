@@ -13,3 +13,26 @@ commands:
     aliases: [g]
     description: Guess in the ChatGame
     usage: /guess <guess>
+permissions:
+  chatgame.*:
+    default: op
+    description: All permissions associated with the ChatGame plugin.
+    children:
+      chatgame.admin.*:
+        description: All admin permissions
+        children:
+          chatgame.admin.start:
+            description: Ability to start the game
+          chatgame.admin.stop:
+            description: Ability to stop the game
+          chatgame.admin.restart:
+            description: Ability to restart the game
+          chatgame.admin.reload:
+            description: Ability to reload the configs
+          chatgame.admin.skip:
+            description: Ability to skip the current round
+          chatgame.admin.next:
+            description: Ability to choose the next game type
+          chatgame.admin.custom:
+            description: Ability to create custom, one-time trivia questions for the next round
+      
