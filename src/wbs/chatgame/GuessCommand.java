@@ -34,7 +34,11 @@ public class GuessCommand implements CommandExecutor {
 		
 		String guess = String.join(" ", args);
 		
-		Game.guess(player, guess);
+		if (!Game.guess(player, guess)) {
+			if (!Game.useGuessCommand) {
+				ChatGame.sendMessage("&wIncorrect!", sender);
+			}
+		}
 		
 		return true;
 	}

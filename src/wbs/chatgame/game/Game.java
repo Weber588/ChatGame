@@ -182,12 +182,14 @@ public class Game {
 		return null;
 	}
 	
-	public static void guess(Player player, String guess) {
+	public static boolean guess(Player player, String guess) {
 		String answer = checkAnswer(guess);
 		if (answer != null) {
 			correct(player, answer);
+			return true;
 		} else {
 			incorrect(player);
+			return false;
 		}
 	}
 	
@@ -883,7 +885,7 @@ public class Game {
 			switch (challenge.toUpperCase()) {
 			case "BACKWARDS":
 				phrase = reverseString(phrase);
-				challengeString = "&o&nbackwards&r ";
+				challengeString = "&obackwards&r ";
 				points++;
 			}
 		}

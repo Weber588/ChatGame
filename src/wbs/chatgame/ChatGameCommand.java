@@ -41,7 +41,6 @@ public class ChatGameCommand implements CommandExecutor {
 		if (sender.isOp()) {
 			return true;
 		}
-		sendMessage("&wYou are lacking a child permission of: &h" + permissionStartsWith, sender);
 		return false;
 	}
 	
@@ -156,79 +155,78 @@ public class ChatGameCommand implements CommandExecutor {
 				}
 				return true;
 			}
+		}
+		// Normal user commands
+		switch (args[0].toUpperCase()) {
+		case "HELP":
+			switch (length) {
+			case 1:
+				help(sender, 1);
+				break;
+			default:
+				try {
+					help(sender, Integer.parseInt(args[1]));
+				} catch (NumberFormatException e) {
+					sendMessage("Usage: &b/cg help [page number]", sender);
+					return true;
+				}
+			}
 			
-			// Normal user commands
-			switch (args[0].toUpperCase()) {
-			case "HELP":
-				switch (length) {
-				case 1:
-					help(sender, 1);
-					break;
-				default:
-					try {
-						help(sender, Integer.parseInt(args[1]));
-					} catch (NumberFormatException e) {
-						sendMessage("Usage: &b/cg help [page number]", sender);
-						return true;
-					}
-				}
-				
+			break;
+		case "INFO":
+			switch (length) {
+			case 1:
+				sendMessage("Usage: &h/cg info [category]&r. Please choose from the following: &h" + getTypesList(), sender);
 				break;
-			case "INFO":
-				switch (length) {
-				case 1:
-					sendMessage("Usage: &h/cg info [category]&r. Please choose from the following: &h" + getTypesList(), sender);
-					break;
-				default:
-					GameType type = getGameType(args[1]);
-					if (type != null) {
-						info(sender, type);
-					} else {
-						sendMessage("Invalid game type; please choose from the following: &h" + getTypesList(), sender);
-					}
+			default:
+				GameType type = getGameType(args[1]);
+				if (type != null) {
+					info(sender, type);
+				} else {
+					sendMessage("Invalid game type; please choose from the following: &h" + getTypesList(), sender);
 				}
-				
+			}
+			
+			break;
+		case "STATS":
+		case "POINTS":
+			switch (length) {
+			case 1:
+				showStats(sender, sender.getName());
 				break;
-			case "STATS":
-			case "POINTS":
-				switch (length) {
-				case 1:
-					showStats(sender, sender.getName());
-					break;
-				case 2:
-					showStats(sender, args[1]);
-					break;
-				default:
-					GameType type = getGameType(args[2]);
-					if (type != null) {
-						showStats(sender, args[1], type);
-					} else {
-						sendMessage("Invalid game type; please choose from the following: &h" + getTypesList(), sender);
-					}
-					break;
+			case 2:
+				showStats(sender, args[1]);
+				break;
+			default:
+				GameType type = getGameType(args[2]);
+				if (type != null) {
+					showStats(sender, args[1], type);
+				} else {
+					sendMessage("Invalid game type; please choose from the following: &h" + getTypesList(), sender);
 				}
 				break;
-			case "LEADERBOARD":
-			case "TOP":
-				int amount;
-				switch (length) {
-				case 1:
-					amount = 5;
-					break;
-				default:
-					try {
-						amount = Integer.parseInt(args[1]);
-					} catch (NumberFormatException e) {
-						sendMessage("Usage: &b/cg top [int]", sender);
-						return true;
-					}
+			}
+			break;
+		case "LEADERBOARD":
+		case "TOP":
+			int amount;
+			switch (length) {
+			case 1:
+				amount = 5;
+				break;
+			default:
+				try {
+					amount = Integer.parseInt(args[1]);
+				} catch (NumberFormatException e) {
+					sendMessage("Usage: &b/cg top [int]", sender);
+					return true;
 				}
-				PlayerData[] top = PlayerData.getTopN(amount, RankType.TOTAL);
-				sendMessageNoPrefix("--== &hTop " + amount + "&r ==--", sender);
-				for (int i = 0; i < amount; i++) {
-					if (top[i] != null) {
-						sendMessageNoPrefix((i+1) + ". &h" + top[i].getUsername() + "&r: " + top[i].getTotalPoints(), sender);
-					}
+			}
+			PlayerData[] top = PlayerData.getTopN(amount, RankType.TOTAL);
+			sendMessageNoPrefix("--== &hTop " + amount + "&r ==--", sender);
+			for (int i = 0; i < amount; i++) {
+				if (top[i] != null) {
+					sendMessageNoPrefix((i+1) + ". &h" + top[i].getUsername() + "&r: " + top[i].getTotalPoints(), sender);
 				}
 			}
 		}
