@@ -849,7 +849,7 @@ public class Game {
 			} else {
 				currentPoints = customPoints;
 			}
-			currentQuestion = chosenQuestion.getQuestion() + " (" + pointsDisplay(currentPoints) + ")";
+			currentQuestion = chosenQuestion.getQuestion() + " &r(" + pointsDisplay(currentPoints) + ")";
 			ChatGame.broadcast(currentQuestion);
 			
 			if (custom != null) {
